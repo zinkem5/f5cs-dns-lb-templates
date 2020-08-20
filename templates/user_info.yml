@@ -11,6 +11,6 @@ httpForward:
     host: api.cloudservices.f5.com
     method: GET
     port: 443
-    path: /v1/svc-auth/login
+    path: /v1/svc-account/user
     headers:
       Content-Type: application/json

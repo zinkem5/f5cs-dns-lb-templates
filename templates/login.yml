@@ -4,7 +4,7 @@ description: |
   Login to F5 Cloud Services and get your Bearer Token
 parameters:
   username: m.zinke@f5.com
-  password: F5p4ssw0rd!
+  password: fffffffff
 definitions:
   username:
     title: Username
