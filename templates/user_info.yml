@@ -1,0 +1,16 @@
+title: F5 CS User Information
+id: f5csAccountUser
+definitions:
+  bearer_token:
+    title: Bearer Token
+    description: The token from <i>link to login</i>
+httpForward:
+  description: f5 cloudservices DNS load balancer api
+  options:
+    protocol: 'https:'
+    host: api.cloudservices.f5.com
+    method: GET
+    port: 443
+    path: /v1/svc-auth/login
+    headers:
+      Content-Type: application/json

@@ -1,0 +1,87 @@
+title: Create Service
+id: creatednslb
+parameters:
+  account_id: primary_account_id
+definitions:
+  account_id:
+    title: Account ID
+    description: Your account ID, obtained from <i>link</i>.
+    type: string
+  application_name:
+    title: Application Name
+    description: The name of the Virtual Server
+  gslb_zone:
+    title: GSLB Zone
+    description: The Top Level Domain name, e.g. example.com
+  ipaddress:
+    title: Destination IP Address
+    description: An IP address to forward traffic to
+template: |
+  {
+  	"account_id": "{{account_id}}",
+  	"catalog_id": "c-aaQnOrPjGu",
+  	"service_type": "gslb",
+  	"service_instance_name": "Example DNS LB Service",
+  	"configuration": {
+  		"gslb_service": {
+  			"zone": "{{gslb_zone}}",
+  			"load_balanced_records": {
+  				"{{subdomain_name}}": {
+  					"display_name": "{{subdomain_name}}",
+  					"enable": true,
+  					"rr_type": "A",
+  					"aliases": ["{{subdomain_name}}"],
+  					"proximity_rules": [{
+  						"region": "global",
+  						"pool": "global_pool",
+  						"score": 1
+  					}],
+  					"persistence": false,
+  					"persist_cidr_ipv4": 24,
+  					"persist_cidr_ipv6": 56,
+  					"persistence_TTL": 5
+  				}
+  			},
+  			"pools": {
+  				"global_pool": {
+  					"display_name": "Global App Cluster",
+  					"enable": true,
+  					"rr_type": "A",
+  					"ttl": 5,
+  					"max_answers" : 1,
+  					"load_balancing_mode": "round-robin",
+  					"members": [{
+  							"virtual_server": "{{application_name}}",
+  							"monitor": "http_monitor"
+  						}
+  					]
+  				}
+  			},
+  			"virtual_servers": {
+  				"{{application_name}}": {
+  					"display_name": "App Instance 1",
+  					"port": 80,
+  					"monitor": "http_monitor",
+  					"address": "{{ipaddress}}"
+  				}
+  			},
+  			"monitors": {
+  				"http_monitor": {
+  					"display_name": "HTTP Monitor",
+  					"monitor_type": "http_standard",
+  					"target_port":80
+  				}
+  			}
+  		}
+  	}
+  }
+httpForward:
+  description: f5 cloudservices DNS load balancer api
+  options:
+    protocol: 'https:'
+    host: api.cloudservices.f5.com
+    method: POST
+    port: 443
+    path: /v1/svc-subscription/subscriptions
+    headers:
+      Content-Type: application/json

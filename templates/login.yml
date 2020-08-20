@@ -1,0 +1,32 @@
+title: F5 CS Login
+id: f5csLogin
+description: |
+  Login to F5 Cloud Services and get your Bearer Token
+parameters:
+  username: m.zinke@f5.com
+  password: F5p4ssw0rd!
+definitions:
+  username:
+    title: Username
+    description: The username of the user to login with.
+    type: string
+  password:
+    title: Password
+    description: The password for the user.
+    type: string
+    format: password
+template: |
+  {
+    "username": "{{username}}",
+    "password": "{{password}}"
+  }
+httpForward:
+  description: f5 cloudservices DNS load balancer api
+  options:
+    protocol: 'https:'
+    host: api.cloudservices.f5.com
+    method: POST
+    port: 443
+    path: /v1/svc-auth/login
+    headers:
+      Content-Type: application/json
